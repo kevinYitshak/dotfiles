@@ -1,7 +1,9 @@
-"KevinYitshak
+" KevinYitshak
+let g:python3_host_prog='/home/kevin/miniconda3/bin/python3'
 
 set nocompatible              " be iMproved, required
 filetype off                  " required
+" set nocp
 
 let mapleader = ";"
 imap <A-q> <Esc><cr>
@@ -32,6 +34,15 @@ set noswapfile
 set incsearch
 set ignorecase
 set smartcase
+set path+=**
+
+
+"VIM inbuilt autocomplete
+" ^x^n for JUST this file
+" ^x^f for filenames
+" ^x^] for tags only
+" ^n for anything specified
+" ^n and ^p to scroll up and down
 
 "mouse
 silent! set ttymouse=xterm2
@@ -52,7 +63,8 @@ Plugin 'junegunn/fzf.vim'
 
 "COLORSCHEMES
 Plugin 'lifepillar/vim-gruvbox8'
-Plugin 'lifepillar/vim-solarized8'
+" Plugin 'lifepillar/vim-solarized8'
+" Plugin 'KeitaNakamura/neodark.vim'
 
 "AIRLINE
 Plugin 'vim-airline/vim-airline'
@@ -60,43 +72,77 @@ Plugin 'vim-airline/vim-airline-themes'
 
 "PYTHON
 Plugin 'Chiel92/vim-autoformat'
-Plugin 'vim-python/python-syntax'
+Plugin 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
 " Plugin 'psf/black', { 'branch': 'stable'  }
-Plugin 'scrooloose/syntastic'
+" Plugin 'scrooloose/syntastic'
 Plugin 'easymotion/vim-easymotion'
+Plugin 'Yggdroot/indentLine'
+Plugin 'tpope/vim-commentary'
 
-" VISTA & LSP
-Plugin 'liuchengxu/vista.vim'
+let g:indentLine_enabled = 1
+let g:indentLine_setColors = 1
+let g:indentLine_char_list = ['┊']
+
+"Async autocomplete
 Plugin 'prabirshrestha/async.vim'
 Plugin 'prabirshrestha/asyncomplete-lsp.vim'
 Plugin 'prabirshrestha/asyncomplete.vim'
 Plugin 'prabirshrestha/vim-lsp'
 Plugin 'mattn/vim-lsp-settings'
 
+" Autocompletion and lsp
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>"
+imap <c-space> <Plug>(asyncomplete_force_refresh)
+set completeopt+=preview
+autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
+
 "MISC
-Plugin 'tpope/vim-commentary'
+" Plugin 'tpope/vim-commentary'
 Plugin 'jiangmiao/auto-pairs'
 Plugin 'kien/rainbow_parentheses.vim'
 Plugin 'ryanoasis/vim-devicons'
 
-" Plugin 'mhinz/vim-startify'
-" Plugin 'scrooloose/nerdtree'
-" All of your Plugins must be added before the following line
+Plugin 'ludovicchabant/vim-gutentags'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
+"-------------------------------------------------------------------------------------------------------------------------
+"Semshi syntax highlighting
 
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
+let g:semshi#filetypes=['python']
+let g:semshi#excluded_hl_groups=['local']
+let g:semshi#error_sign=v:false
+nmap <silent> <leader>n :Semshi goto name next<CR>
+nmap <silent> <leader>N :Semshi goto name prev<CR>
 
-" Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-"
-" see :h vundle for more details or wiki for FAQ
-" Put your non-Plugin stuff after this line
+nmap <silent> <leader>c :Semshi goto class next<CR>
+nmap <silent> <leader>C :Semshi goto class prev<CR>
+
+nmap <silent> <leader>f :Semshi goto function next<CR>
+nmap <silent> <leader>F :Semshi goto function prev<CR>
+
+"-------------------------------------------------------------------------------------------------------------------------
+"MAKE TAGS
+
+let g:gutentags_modules=['ctags', 'gtags_cscope']
+let g:gutentags_add_default_project_roots = 0
+let g:gutentags_project_root = ['package.json', '.git']
+let g:gutentags_cache_dir = expand('~/.cache/vim/ctags/')
+command! -nargs=0 GutentagsClearCache call system('rm ' . g:gutentags_cache_dir . '/*')
+let g:gutentags_generate_on_new = 1
+let g:gutentags_generate_on_missing = 1
+let g:gutentags_generate_on_write = 1
+let g:gutentags_generate_on_empty_buffer = 0
+
+" makes tag in the current directory
+" in folder name called tag.
+" ^] to jump to tag
+" g^] to list all tags
+" ^t to jump back up the tag stack
+" All of your Plugins must be added before the following line
+
 
 " Auto format
 noremap fo :Autoformat<cr>
@@ -113,15 +159,23 @@ let g:airline#extensions#tagbar#enabled = 1
 let g:airline_skip_empty_sections = 1
 let g:webdevicons_enable_airline_tabline = 1
 let g:webdevicons_enable_airline_statusline = 1
+"-------------------------------------------------------------------------------------------------------------------------
 
 set t_Co=256
 
-"COLORSCHEME
+" COLORSCHEME
 set background=dark
 let g:gruvbox_filetype_hi_groups=1
 let g:gruvbox_italicize_strings=1
-let g:gruvbox_transp_bg=1
+let g:gruvbox_transp_bg=0
 colorscheme gruvbox8
+
+
+" colorscheme neodark
+" let g:neodark#terminal_transparent = 1
+" let g:neodark#solid_vertsplit = 1
+" let g:neodark#background = '#202020'
+
 
 " set background=dark
 " colorscheme solarized8_flat
@@ -131,6 +185,7 @@ colorscheme gruvbox8
 " let g:solarized_termtrans=0
 set termguicolors
 set cursorline
+"-------------------------------------------------------------------------------------------------------------------------
 
 
 " RainbowParanthesis
@@ -142,20 +197,13 @@ au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
+"-------------------------------------------------------------------------------------------------------------------------
 
 
 "Easymotion
 let g:EasyMotion_do_mapping = 0 " Disable default mappings
-
-" Jump to anywhere you want with minimal keystrokes, with just one key binding.
-" `s{char}{label}`
 nmap s <Plug>(easymotion-overwin-f)
-" or
-" `s{char}{char}{label}`
-" Need one more keystroke, but on average, it may be more comfortable.
 nmap s <Plug>(easymotion-overwin-f2)
-
-" Turn on case-insensitive feature
 let g:EasyMotion_smartcase = 1
 
 " JK motions: Line motions
@@ -163,7 +211,7 @@ map ej <Plug>(easymotion-j)
 map ek <Plug>(easymotion-k)
 map ew <Plug>(easymotion-w)
 map eb <Plug>(easymotion-b)
-
+"-------------------------------------------------------------------------------------------------------------------------
 
 " Automatically deletes all trailing whitespace and newlines at end of file on save.
 autocmd BufWritePre * %s/\s\+$//e
@@ -171,31 +219,32 @@ autocmd BufWritepre * %s/\n\+\%$//e
 
 " Spell-check set to <leader>o, 'o' for 'orthography':
 map 1s :setlocal spell! spelllang=en_us<cr>
-
-" Comment
-map c gcc
+"-------------------------------------------------------------------------------------------------------------------------
 
 "Syntastic
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+"set statusline+=%#warningmsg#
+"set statusline+=%{SyntasticStatuslineFlag()}
+"set statusline+=%*
 
-let g:syntastic_always_populate_loc_list=1
-let g:syntastic_auto_loc_list=0
-let g:syntastic_check_on_open=0
-let g:syntastic_check_on_wq =0
-let g:syntastic_python_pyflakes_exe = 'python3 -m pyflakes'
-let g:syntastic_python_checkers = [ 'pyflakes', 'pep8', 'flake8', 'pylint']
-let g:syntastic_error_symbol = '✗✗'
-let g:syntastic_style_error_symbol = '✠✠'
-let g:syntastic_warning_symbol = '∆∆'
-let g:syntastic_style_warning_symbol = '≈≈'
-nnoremap <A-c> :SyntasticCheck<cr>
-nnoremap <A-s> :SyntasticToggleMode<cr>
+"let g:syntastic_always_populate_loc_list=0
+"let g:syntastic_auto_loc_list=0
+"let g:syntastic_check_on_open=1
+"let g:syntastic_check_on_wq =0
+"let g:syntastic_python_flake8_exe = 'python3 -m flake8'
+"let g:syntastic_python_checkers = [ 'flake8']
+"let g:syntastic_python_flake8_args='--ignore=E501,E128,E225,E226'
+"let g:syntastic_error_symbol = '✗✗'
+"let g:syntastic_style_error_symbol = '✠✠'
+"let g:syntastic_warning_symbol = '∆∆'
+"let g:syntastic_style_warning_symbol = '≈≈'
+"nnoremap <A-c> :SyntasticCheck<cr>
+"nnoremap <A-s> :SyntasticToggleMode<cr>
+"-------------------------------------------------------------------------------------------------------------------------
 
 " Black
 " let g:black_fast=0
 " autocmd BufWritePre *.py execute ':Black'
+"-------------------------------------------------------------------------------------------------------------------------
 
 "Window Navigation
 map <leader>h <C-w>h
@@ -218,6 +267,7 @@ noremap fi *
 "Vmap for maintain Visual Mode after shifting > and <
 vmap < <gv
 vmap > >gv
+"-------------------------------------------------------------------------------------------------------------------------
 
 " Python Highlighting
 let python_highlight_all = 1
@@ -230,7 +280,7 @@ let python_highlight_string_templates = 1
 let python_highlight_indent_errors = 1
 let python_highlight_space_errors = 1
 let python_highlight_doctests = 1
-
+"-------------------------------------------------------------------------------------------------------------------------
 
 "" no one is really happy until you have this shortcuts
 cnoreabbrev W! w!
@@ -243,90 +293,18 @@ cnoreabbrev WQ wq
 cnoreabbrev W w
 cnoreabbrev Q q
 cnoreabbrev Qall qall"
+"-------------------------------------------------------------------------------------------------------------------------
 
 " FZF
 " nnoremap <silent> <leader>f :FZF<cr>
 " nnoremap <silent> <leader>F :FZF ~<cr>
 nnoremap <silent> <A-f> :Files<cr>
 nnoremap <silent> <A-b> :Buffers<cr>
-let g:fzf_layout = { 'right': '~35' }
+nnoremap <silent> <A-t> :Tags<cr>
+" let g:fzf_layout = { 'right': '~35' }
+let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
+"-------------------------------------------------------------------------------------------------------------------------
 
-
-" Autocompletion and lsp
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>"
-imap <c-space> <Plug>(asyncomplete_force_refresh)
-set completeopt+=preview
-nnoremap <leader>v :Vista!!<cr>
-
-let g:lsp_diagnostics_enabled = 0
-let g:vista_executive_for = {
-			\ 'python': 'vim_lsp',
-			\ }
-let g:vista_ignore_kinds = ['Variable']
-let g:airline#extensions#vista#enabled = '0'
-let g:vista_icon_indent = ["╰▸ ", "├▸ "]
-let g:vista_fzf_preview = ['right:40%']
-let g:vista_stay_on_open=0
-let g:vista_diable_statusline=1
-let g:vista#renderer#enable_icon = 1
-
-" The default icons can't be suitable for all the filetypes, you can extend it
-" as you wish.
-let g:vista#renderer#icons = {
-			\   "function": "\uf794",
-			\   "variable": "\uf71b",
-			\  }
-
-" function! NearestMethodOrFunction() abort
-"	return get(b:, 'vista_nearest_method_or_function', '')
-" endfunction
-
-" set statusline+=%{NearestMethodOrFunction()}
-" autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
-
-" ------------------------------------------------------------------------------------------------------------
-
-"NOT IN USE
-
-" Use deoplete.
-" let g:deoplete#enable_at_startup = 1
-
-
-" ACK
-"let g:ackprg = 'ag --nogroup --nocolor --column'
-"map <leader>ac :Ack<Space>
-
-" Jedi-Vim
-" let g:jedi#auto_initialization=1
-" let g:jedi#goto_command = "gc"
-" let g:jedi#goto_definitions_command = "gd"
-" let g:jedi#completions_enabled=1
-"
-
-" NERDTREE
-" autocmd vimenter * NERDTree
-" autocmd StdinReadPre * let s:std_in=1
-" autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-
-" let NERDTreeQuitOnOpen = 1
-" let NERDTreeMinimalUI = 1
-" let NERDTreeDirArrows = 1
-" let NERDTreeAutoDeleteBuffer = 1
-" " nnoremap 1n :NERDTreeToggle<Enter>
-" let NERDTreeWinSize=21
-" let g:webdevicons_enable_nerdtree = 1
-" nnoremap <A-t> :NERDTreeToggle<cr>
-
-
-"autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-
-""TAG BAR
-"let g:tagbar_width=30
-"let g:tagbar_zoomwidth=0
-"let g:tagbar_autoclose=0
-"let g:tagbar_compact=1
-"let g:tagbar_show_linenumbers=1
-"let g:tagbar_autofocus=1
-"nnoremap <leader>t :TagbarToggle<cr>
+"VIM-COMMENTARY
+map c gcc
+"-------------------------------------------------------------------------------------------------------------------------
