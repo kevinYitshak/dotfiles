@@ -6,22 +6,29 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 # If you come from bash you might have to change your $PATH.
-export PATH=$HOME/bin:/usr/local/bin:$PATH
+# export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH=$HOME/.oh-my-zsh
+export ZSH="/home/kevin/.oh-my-zsh"
+
+export PATH=/home/kevin/.nvm/versions/node/v14.3.0/bin/:$PATH
+# export PATH=/mnt/c/Program\ Files/MiKTeX\ 2.9/miktex/bin/x64:$PATH
+# export PATH=/mnt/c/Program\ Files/SumatraPDF/SumatraPDF.exe:$PATH
+
+export PATH=/usr/local/texlive/2020/bin/x86_64-linux/:$PATH
+
+export PATH=/mnt/c/Program\ Files/SumatraPDF/:$PATH
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-
-# POWERLEVEL10K_MODE="DejaVuSansMono NF"
 ZSH_THEME="powerlevel10k/powerlevel10k"
-
+# ZSH_THEME="gruvbox"
+# SOLARIZED_THEME="dark"
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
-# a theme from this variable instead of looking in ~/.oh-my-zsh/themes/
+# a theme from this variable instead of looking in $ZSH/themes/
 # If set to an empty array, this variable will have no effect.
 # ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
 
@@ -73,11 +80,11 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
 # Which plugins would you like to load?
-# Standard plugins can be found in ~/.oh-my-zsh/plugins/*
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
+# Standard plugins can be found in $ZSH/plugins/
+# Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
+plugins=(zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -104,39 +111,38 @@ source $ZSH/oh-my-zsh.sh
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
-alias zc="nvim ~/.zshrc"
-alias bc='nvim ~/.bashrc'
-alias rc='cd /mnt/c/Users/kevin'
-alias nc='nvim ~/.config/nvim/init.vim'
+alias zconfig="nvim ~/.zshrc"
+alias nconfig="nvim ~/.config/nvim/init.vim"
+alias bconfig="nvim ~/.bashrc"
+alias v="nvim"
+alias rc="cd /mnt/c/Users/kevin"
 
-# alias ohmyzsh="mate ~/.oh-my-zsh"
+# alias latexmk='/mnt/c/Program\ Files/MiKTeX\ 2.9/miktex/bin/x64/latexmk.exe'
+# alias SumatraPDF='/mnt/c/Program\ Files/SumatraPDF/SumatraPDF.exe'
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# alias ls='ls'
-# alias ll='ll -alF'
-# alias la='la -A'
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/kevin/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+__conda_setup="$('/home/kevin/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/home/kevin/anaconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/kevin/anaconda3/etc/profile.d/conda.sh"
+    if [ -f "/home/kevin/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/kevin/miniconda3/etc/profile.d/conda.sh"
     else
-        export PATH="/home/kevin/anaconda3/bin:$PATH"
+        export PATH="/home/kevin/miniconda3/bin:$PATH"
     fi
 fi
 unset __conda_setup
 # <<< conda initialize <<<
 
-source /home/kevin/.zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-# ZSH_THEME="powerlevel10k/powerlevel10k"
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-# export FZF_DEFAULT_COMMAND='ag --ignore .git *.pyc -g ""'
-export FZF_DEFAULT_OPTS='--height 60% --layout=reverse --border'
+
+# export NVM_DIR="$HOME/.nvm"
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+alias nvm='[ -s "HOME/.nvm/nvm.sh"  ] && \. "HOME/.nvm/nvm.sh"'
+# alias node='/home/kevin/.nvm/versions/node/v14.3.0/bin/'
