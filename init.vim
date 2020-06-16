@@ -15,17 +15,18 @@ call plug#begin('~/.config/nvim/plugged')
 "------------------------------------------------------------------------------------------------------------------------
 " COLORSCHEMES
 Plug 'sainnhe/gruvbox-material'
+Plug 'sainnhe/forest-night'
 "------------------------------------------------------------------------------------------------------------------------
 " AIRLINE
 " Plug 'vim-airline/vim-airline'
 " Plug 'vim-airline/vim-airline-themes'
+" Plug 'hardcoreplayers/dashboard-nvim'
 
 Plug 'itchyny/lightline.vim'
 Plug 'maximbaz/lightline-ale'
 "------------------------------------------------------------------------------------------------------------------------
 Plug 'junegunn/vim-easy-align'
 Plug 'majutsushi/tagbar'
-Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 Plug 'tpope/vim-commentary'
 Plug 'dense-analysis/ale'
 
@@ -100,10 +101,18 @@ set ignorecase
 set smartcase
 set path+=**
 
+"Use windows clipboard if yanked
+let s:clip = '/mnt/c/Windows/System32/clip.exe'
+if executable(s:clip)
+  augroup WSLYank
+    autocmd!
+    autocmd TextYankPost * if v:event.operator ==# 'y' | call system(s:clip, @0) | endif
+  augroup END
+endif
+
 
 " Spell-check set to <leader>o, 'o' for 'orthography':
 map <leader>o :setlocal spell! spelllang=en_us<CR>
-
 
 "Window Navigation
 
@@ -130,7 +139,7 @@ vmap > >gv
 
 "mouse
 silent! set ttymouse=xterm2
-set mouse=n
+set mouse=a
 
 nnoremap <C-t> :tabnew
 nnoremap <C-b> :bdelete<cr>
@@ -159,14 +168,18 @@ endif
 set background=dark
 let g:gruvbox_material_palette = 'mix'
 let g:gruvbox_material_enable_italic = 1
-let g:gruvbox_material_background = 'medium'
+let g:gruvbox_material_background = 'soft'
 let g:gruvbox_material_statusline_style = 'original'
 let g:gruvbox_material_visual = 'reverse'
 let g:gruvbox_material_diagnostic_line_highlight = 1
 let g:gruvbox_material_statusline_style = 'original'
 let g:gruvbox_material_better_performance = 1
-
+let g:gruvbox_material_enable_italic = 1
 colorscheme gruvbox-material
+
+" set background=dark
+" colorscheme forest-night
+
 set cursorline
 "------------------------------------------------------------------------------------------------------------------------
 
@@ -175,10 +188,6 @@ let g:tagbar_width = 25
 let g:tagbar_iconchars = ['↠', '↡']
 map <leader>t :TagbarToggle<CR>
 
-"------------------------------------------------------------------------------------------------------------------------
-" FastFold
-" let g:tex_fold_enabled=1
-" let g:vimsyn_folding='af'
 "------------------------------------------------------------------------------------------------------------------------
 
 "AIRLINE
@@ -539,3 +548,4 @@ let g:lightline.component_type = {
 			\ 'linter_warnings': 'warning',
 			\ 'linter_errors': 'error',
 			\ }
+"----------------------------------------------------------------------------------------------------------------------
